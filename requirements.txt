@@ -1,4 +1,5 @@
 arrow==0.15.5
 huey==2.2.0 
+crontab==0.22.6
 pylint==2.5.0
 black==19.10b0

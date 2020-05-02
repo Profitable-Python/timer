@@ -1,6 +1,7 @@
 import os
 import arrow
 import huey
+import crontab
 
 # from app import main
 
@@ -16,6 +17,12 @@ minute hour day-of-month month day-of-week
 50 15 * * 0,1,2,3,4
 
 """
+
+BACKEND_FILENAME = "huey.db"
+
+HUEY_BACKEND = os.path.join(".", BACKEND_FILENAME)
+
+huey = huey.SqliteHuey(filename=HUEY_BACKEND)
 
 
 def get_target_datetime():
@@ -39,22 +46,27 @@ def get_target_datetime():
 
 
 # periodic task >> https://huey.readthedocs.io/en/latest/api.html#Huey.periodic_task
-@huey.periodic_task(validate_datetime=get_target_datetime, retries=5)
+@huey.periodic_task(crontab.CronTab("*/1 * * * *"), retries=5)
 def custom_scheduled_task():
     print("I am working!!")
 
+
+"""
+lol, i think im still online.
+"""
+print("am i still online?")
 
 # @huey.task(priority=10)
 # def send_email(to, subj, body):
 #     return mailer.send(to, "", subj, body)
 
 
+@huey.task()
+def add_numbers(a, b):
+    return a + b
+
+
 if __name__ == "__main__":
     # requested_time = get_target_datetime()
     # print(requested_time)
-
-    BACKEND_FILENAME = "huey.db"
-
-    HUEY_BACKEND = os.path.join(".", BACKEND_FILENAME)
-
-    huey = huey.SqliteHuey(filename=HUEY_BACKEND)
+    pass
